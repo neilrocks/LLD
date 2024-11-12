@@ -86,7 +86,7 @@ class MobDisplayObserver implements Observer{
         System.out.println(obj.getData());
     }
 }
-public class Main
+class Main
 {
 	public static void main(String[] args) {
 		Observable obj1 = new WeatherStationObservable();
