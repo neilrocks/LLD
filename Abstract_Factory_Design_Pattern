@@ -19,7 +19,11 @@ class BMW extends LuxuryVehicle {
         super("BMW");
     }
 }
-
+class Mercedes extends LuxuryVehicle {
+    public Mercedes() {
+        super("Mercedes");
+    }
+}
 class Audi extends LuxuryVehicle {
     public Audi() {
         super("Audi");
@@ -50,22 +54,32 @@ class Alto extends OrdinaryVehicle {
     }
 }
 
-interface VehicleFactory {
-    Vehicle createVehicle(String type);
-}
-
-class LuxuryVehicleFactory implements VehicleFactory {
-    public Vehicle createVehicle(String type) {
-        if ("BMW".equalsIgnoreCase(type)) {
-            return new BMW();
-        } else if ("Audi".equalsIgnoreCase(type)) {
-            return new Audi();
+abstract class VehicleFactory {
+    abstract Vehicle createVehicle(String type);
+    static VehicleFactory getVehicleFactory(String type){
+        if ("Luxury".equalsIgnoreCase(type)) {
+            return new LuxuryVehicleFactory();
+        } else if ("Ordinary".equalsIgnoreCase(type)) {
+            return new OrdinaryVehicleFactory();
         }
         return null;
     }
 }
 
-class OrdinaryVehicleFactory implements VehicleFactory {
+class LuxuryVehicleFactory extends VehicleFactory {
+    public Vehicle createVehicle(String type) {
+        if ("BMW".equalsIgnoreCase(type)) {
+            return new BMW();
+        } else if ("Audi".equalsIgnoreCase(type)) {
+            return new Audi();
+        } else if ("Mercedes".equalsIgnoreCase(type)) {
+            return new Mercedes();
+        }
+        return null;
+    }
+}
+
+class OrdinaryVehicleFactory extends VehicleFactory {
     public Vehicle createVehicle(String type) {
         if ("Hyundai".equalsIgnoreCase(type)) {
             return new Hyundai();
@@ -79,15 +93,18 @@ class OrdinaryVehicleFactory implements VehicleFactory {
 public class Main {
     public static void main(String[] args) {
         // Using LuxuryVehicleFactory to create luxury vehicles
-        VehicleFactory luxuryFactory = new LuxuryVehicleFactory();
-        Vehicle bmw = luxuryFactory.createVehicle("BMW");
+        VehicleFactory fact = VehicleFactory.getVehicleFactory("Luxury");
+        Vehicle bmw = fact.createVehicle("BMW");
         System.out.println(bmw.getType());  // Output: Luxury Vehicle: BMW
 
-        Vehicle audi = luxuryFactory.createVehicle("Audi");
+        Vehicle audi = fact.createVehicle("Audi");
         System.out.println(audi.getType());  // Output: Luxury Vehicle: Audi
+        
+        Vehicle mer = fact.createVehicle("Mercedes");
+        System.out.println(mer.getType());  // Output: Luxury Vehicle: Mercedes
 
         // Using OrdinaryVehicleFactory to create ordinary vehicles
-        VehicleFactory ordinaryFactory = new OrdinaryVehicleFactory();
+        VehicleFactory ordinaryFactory = VehicleFactory.getVehicleFactory("Ordinary");
         Vehicle hyundai = ordinaryFactory.createVehicle("Hyundai");
         System.out.println(hyundai.getType());  // Output: Ordinary Vehicle: Hyundai
 
